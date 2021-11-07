@@ -1,4 +1,5 @@
 const form = document.querySelector('#form');
+const loadingOverlay = document.querySelector('.loading-overlay');
 
 // Object for global Http Error handling.
 
@@ -14,6 +15,10 @@ const loadJson = async (url) => {
   const response = await fetch(url, { mode: 'cors' });
   if (response.status == 200) {
     return response.json();
+  } else if (response.status == 404) {
+    hideLoader();
+    alert(`No results found.`);
+    return;
   } else {
     throw new HttpError(response);
   }
@@ -23,6 +28,7 @@ const getLocation = async (e) => {
   e.preventDefault();
   const input = document.querySelector('#search-bar');
   const location = input.value;
+  showLoader();
   getWeatherData(location);
   input.value = '';
 };
@@ -31,8 +37,13 @@ const getWeatherData = async (location) => {
   const data = await loadJson(
     `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=59499ea3663b2b05c9a5b852ee18a988`
   );
-  const processedData = processData(data);
-  displayData(processedData);
+  if (data) {
+    const processedData = processData(data);
+    displayData(processedData);
+    hideLoader();
+  } else {
+    return;
+  }
 };
 
 // Destructred for easier data handling
@@ -88,9 +99,23 @@ const faliureCallback = async () => {
 };
 
 const getUserLocation = (() => {
+  showLoader();
   if (window.navigator.geolocation) {
     window.navigator.geolocation.getCurrentPosition(successfulLookup, faliureCallback);
   }
 })();
 
+// function toggleLoader() {
+//   if (loadingOverlay.classList.contains('active')) {
+//     loadingOverlay.classList.remove(`active`);
+//   } else {
+//     loadingOverlay.classList.add('active');
+//   }
+// }
+function showLoader() {
+  loadingOverlay.classList.add('active');
+}
+function hideLoader() {
+  loadingOverlay.classList.remove('active');
+}
 form.addEventListener('submit', getLocation);
