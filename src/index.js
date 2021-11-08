@@ -97,7 +97,7 @@ const successfulLookup = async (position) => {
     `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=70d3b04467864dcf917523e42e7029d4`
   );
   const location = data.results[0].components.state_district;
-  getWeatherData('hong kong');
+  getWeatherData(location);
 };
 
 const faliureCallback = async () => {
@@ -125,8 +125,6 @@ function hideLoader() {
   loadingOverlay.classList.remove('active');
 }
 
-form.addEventListener('submit', getLocation);
-
 const twoDigits = (val) => {
   return ('0' + val).slice(-2);
 };
@@ -140,3 +138,4 @@ const getTime = (timezone) => {
   const time = new Date(curTime).toUTCString();
   return time;
 };
+form.addEventListener('submit', getLocation);
