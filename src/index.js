@@ -51,6 +51,8 @@ const processData = ({
   main: { feels_like, grnd_level, humidity, pressure, sea_level, temp, temp_max, temp_min },
   name,
   sys: { country },
+  timezone,
+  dt,
 }) => {
   return {
     name,
@@ -60,6 +62,8 @@ const processData = ({
     temp_min,
     humidity,
     pressure,
+    timezone,
+    date: dt,
     feel: feels_like,
     ground: grnd_level,
     sea: sea_level,
@@ -71,16 +75,18 @@ const displayData = (data) => {
   const temp = document.querySelector('.temp > .number');
   const feels = document.querySelector('.feels-like > span');
   const humidity = document.querySelector('.humidity > span');
+  const date = document.querySelector('.date');
   // const pressure = document.querySelector('.pressure > span');
 
   location.textContent = `${data.name}, ${data.country}`;
-  temp.textContent = `${convertNumber(data.temp)}`;
-  feels.textContent = `${convertNumber(data.feel)}`;
+  temp.textContent = `${convertUnit(data.temp)}`;
+  date.textContent = `${getTime(data.timezone)}`;
+  feels.textContent = `${convertUnit(data.feel)}`;
   humidity.textContent = `${data.humidity} %`;
 };
 
-function convertNumber(kelvin) {
-  let number = kelvin;
+function convertUnit(temperature) {
+  let number = temperature;
   let celcius = Math.round(number - 273.15);
   return celcius;
 }
@@ -91,7 +97,7 @@ const successfulLookup = async (position) => {
     `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=70d3b04467864dcf917523e42e7029d4`
   );
   const location = data.results[0].components.state_district;
-  getWeatherData(location);
+  getWeatherData('hong kong');
 };
 
 const faliureCallback = async () => {
@@ -118,4 +124,19 @@ function showLoader() {
 function hideLoader() {
   loadingOverlay.classList.remove('active');
 }
+
 form.addEventListener('submit', getLocation);
+
+const twoDigits = (val) => {
+  return ('0' + val).slice(-2);
+};
+
+const getTime = (timezone) => {
+  const d = new Date();
+  const localTime = d.getTime();
+  const localOffset = d.getTimezoneOffset() * 60000;
+  const utc = localTime + localOffset;
+  const curTime = utc + timezone * 1000;
+  const time = new Date(curTime).toUTCString();
+  return time;
+};

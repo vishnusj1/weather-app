@@ -61,8 +61,27 @@ nav {
   font-size: 18px;
   border-left: 4px solid salmon;
 }
-
-.location {
+.btns {
+  float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btns button {
+  font-size: 18px;
+  background: none;
+  color: white;
+  border: none;
+}
+.btns hr {
+  height: 18px;
+  width: 2px;
+  color: white;
+  content: '|';
+  margin: 0 6px;
+  border: 1px solid white;
+}
+.fs24 {
   font-size: 24px;
 }
 
@@ -89,32 +108,60 @@ nav {
   align-items: center;
 }
 /* Loader component */
-.lds-circle {
-  display: inline-block;
-  transform: translateZ(1px);
-}
-.lds-circle > div {
-  display: inline-block;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
+.loader,
+.loader:before,
+.loader:after {
   border-radius: 50%;
-  background: salmon;
-  animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation: load7 1.8s infinite ease-in-out;
+  animation: load7 1.8s infinite ease-in-out;
 }
-@keyframes lds-circle {
+.loader {
+  color: salmon;
+  font-size: 10px;
+  margin: 80px auto;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+}
+.loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 3.5em;
+}
+@-webkit-keyframes load7 {
   0%,
+  80%,
   100% {
-    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+    box-shadow: 0 2.5em 0 -1.3em;
   }
-  0% {
-    transform: rotateY(0deg);
+  40% {
+    box-shadow: 0 2.5em 0 0;
   }
-  50% {
-    transform: rotateY(1800deg);
-    animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
-  }
+}
+@keyframes load7 {
+  0%,
+  80%,
   100% {
-    transform: rotateY(3600deg);
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
   }
 }
